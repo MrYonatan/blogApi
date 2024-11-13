@@ -37,10 +37,22 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     
-    #rd party
+    #3rd party
+    # the best way to imagine is dj_rest_auth 
+    #is being the bigger image and library but registration related tasks are done through allauth 
+    # so we integrate it with dj_rest_auth to do signup and related tasks. and the intergration happens behind the scenes. 
+    # you cant find a particular code that integrates the two. the integration is the inclusion in the installed apps. 
     "rest_framework",
     "corsheaders",
+    "rest_framework.authtoken",
+    "allauth", 
+    "allauth.account", # new
+    "allauth.socialaccount", # new
+    "dj_rest_auth",
+    "dj_rest_auth.registration", 
+
     
     #local
     "accounts.apps.AccountsConfig",
@@ -56,6 +68,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "todoProj.urls"
@@ -71,10 +84,15 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.request",
             ],
         },
     },
 ]
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+SITE_ID = 1 
 
 WSGI_APPLICATION = "todoProj.wsgi.application"
 
@@ -134,9 +152,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 REST_FRAMEWORK = { # new
+                  
         "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-    ],
+            "rest_framework.permissions.IsAuthenticated",
+        ],
+        
+        "DEFAULT_AUTHENTICATION_CLASSES": [
+            "rest_framework.authentication.SessionAuthentication",
+            "rest_framework.authentication.TokenAuthentication",
+        ]
 }
 
 CORS_ORIGIN_WHITELIST = (
