@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAdminUser
 from .models import Post
 
 class PostViewSet(viewsets.ModelViewSet):
-    permissions_classes = (IsAuthorOrReadOnly,)
+    permission_classes = (IsAuthorOrReadOnly,)
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     
